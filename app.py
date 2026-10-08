@@ -22,7 +22,7 @@ J'ai développé cet outil pour démontrer des compétences en programmation Pyt
 
 # --- SIDEBAR CONFIGURATION ---
 st.sidebar.header("Paramètres de Simulation")
-ticker = st.sidebar.text_input("Ticker Marché (Yahoo Finance)", value="NG=F")
+ticker = st.sidebar.text_input("Ticker Marché (Yahoo Finance)", value="NG=FF")
 n_paths = st.sidebar.slider("Trajectoires Monte-Carlo", min_value=100, max_value=2000, value=500, step=100)
 n_days = st.sidebar.slider("Horizon de simulation (jours)", min_value=10, max_value=90, value=30, step=5)
 confidence_level = st.sidebar.selectbox("Niveau de Confiance VaR / ES", [0.95, 0.99], index=1)
@@ -80,7 +80,7 @@ with tab1:
         ))
 
     fig.update_layout(
-        title=f"Simulation de Prix - {ticker}",
+        title=f"Simulation de Prix : {ticker}",
         xaxis_title="Date",
         yaxis_title="Prix ($)",
         template="plotly_white",
