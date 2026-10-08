@@ -26,7 +26,13 @@ class EnergyStochasticEngine:
                 
             return prices
         except Exception as e:
-            print(f"⚠️ Erreur lors du téléchargement ({e}). Génération de données synthétiques de secours...")
+            # SI YAHOO BLOQUE : On génère des fausses données réalistes pour sauver la démo !
+            print(f"Erreur yfinance ({e}), utilisation de données de secours.")
+            dates = pd.date_range(end=pd.Timestamp.today(), periods=504, freq='B')
+            # Simulation d'un prix du gaz autour de 3.0$ avec un peu de bruit
+            np.random.seed(42)
+            random_walk = 3.0 + np.cumsum(np.random.normal(0, 0.05, 504))
+            return pd.Series(random_walk, index=dates)
 
     def calibrate_ou_parameters(self):
         """

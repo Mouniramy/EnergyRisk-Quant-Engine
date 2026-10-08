@@ -40,6 +40,11 @@ def load_engine(ticker_symbol):
 engine = load_engine(ticker)
 historical_prices = engine.historical_prices
 
+# SÉCURITÉ : Vérifier si les données ont bien été récupérées
+if historical_prices is None or historical_prices.empty:
+    st.error(f"⚠️ Impossible de récupérer les données pour le ticker '{ticker}' via Yahoo Finance (restriction IP ou ticker invalide). Essaie de recharger la page ou de changer de ticker dans la barre latérale.")
+    st.stop() # Arrête l'exécution proprement pour éviter le crash
+
 # Lancer les simulations Monte-Carlo
 simulated_paths = engine.simulate_monte_carlo(n_paths=n_paths, n_days=n_days)
 
