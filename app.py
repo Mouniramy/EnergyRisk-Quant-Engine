@@ -1,5 +1,5 @@
 import streamlit as st
-# import numpy as np
+import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
 
@@ -10,7 +10,7 @@ from src.physical_asset import GasStorageAsset
 # Configuration de la page Streamlit
 st.set_page_config(
     page_title="EnergyRisk Quant Engine",
-    page_icon="o",
+    page_icon="⚡",
     layout="wide"
 )
 
@@ -44,7 +44,7 @@ historical_prices = engine.historical_prices
 simulated_paths = engine.simulate_monte_carlo(n_paths=n_paths, n_days=n_days)
 
 # Créer un portefeuille synthétique basé sur l'historique pour le risk engine
-portfolio_synth = historical_prices * 10000
+portfolio_synth = historical_prices * 10000 
 
 # --- ORGANISATION EN ONGLETS ---
 tab1, tab2, tab3 = st.tabs(["1. Modèle Stochastique & Prix", "2. Risque de Marché & Stress Test", "3. Valorisation Stockage Physique"])
@@ -53,7 +53,7 @@ with tab1:
     st.subheader("Modélisation Stochastique (Ornstein-Uhlenbeck & Monte-Carlo)")
     st.markdown("Comparaison entre l'historique réel des prix de l'énergie et les trajectoires futures simulées.")
 
-    fig = go.Figure()           
+    fig = go.Figure()
     # Courbe historique
     fig.add_trace(go.Scatter(
         x=historical_prices.index[-100:], 
@@ -75,7 +75,7 @@ with tab1:
         ))
 
     fig.update_layout(
-        title=f"Simulation de Prix : {ticker}",
+        title=f"Simulation de Prix - {ticker}",
         xaxis_title="Date",
         yaxis_title="Prix ($)",
         template="plotly_white",

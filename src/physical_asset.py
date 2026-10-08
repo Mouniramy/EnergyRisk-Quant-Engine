@@ -2,11 +2,18 @@ import numpy as np
 import pandas as pd
 
 class GasStorageAsset:
-    def __init__(self, max_capacity=1000.0, max_stockage=50.0, max_destockage=50.0, cout_stockage=0.05):
-        self.max_capacity = max_capacity #Capacité totale du réservoir
-        self.max_stockage = max_stockage #Volume max qu'on peut stocker par jour
-        self.max_destockage = max_destockage #Volume max qu'on peut déstocker par jour
-        self.cout_stockage = cout_stockage #Coût fixe d'injection par unité
+    def __init__(self, max_capacity=1000.0, max_injection_rate=50.0, max_withdrawal_rate=50.0, injection_cost=0.05):
+        """
+        Initialise un actif de stockage de gaz physique avec ses contraintes opérationnelles :
+        - max_capacity : Capacité totale du réservoir (en MWh ou unités équivalentes)
+        - max_injection_rate : Volume max qu'on peut stocker par jour
+        - max_withdrawal_rate : Volume max qu'on peut déstocker par jour
+        - injection_cost : Coût fixe d'injection par unité
+        """
+        self.max_capacity = max_capacity
+        self.max_injection_rate = max_injection_rate
+        self.max_withdrawal_rate = max_withdrawal_rate
+        self.injection_cost = injection_cost
 
     def optimize_storage_value(self, price_paths: np.ndarray):
         """
@@ -21,7 +28,7 @@ class GasStorageAsset:
         n_days, n_paths = price_paths.shape
         total_payoffs = np.zeros(n_paths)
 
-        # Simulation d'une stratégie de gestion du stockage par trajectoire
+        # Simulation simple d'une stratégie de gestion du stockage par trajectoire
         for j in range(n_paths):
             path = price_paths[:, j]
             inventory = self.max_capacity * 0.5  # On commence avec un réservoir à moitié plein
@@ -37,13 +44,13 @@ class GasStorageAsset:
 
                 if current_price < m_mean * 0.95 and inventory < self.max_capacity:
                     # Décision : Acheter / Injecter du gaz
-                    volume = min(self.max_stockage, self.max_capacity - inventory)
-                    cost = volume * (current_price + self.cout_stockage)
+                    volume = min(self.max_injection_rate, self.max_capacity - inventory)
+                    cost = volume * (current_price + self.injection_cost)
                     cash_flow -= cost
                     inventory += volume
                 elif current_price > m_mean * 1.05 and inventory > 0:
                     # Décision : Vendre / Déstocker du gaz
-                    volume = min(self.max_destockage, inventory)
+                    volume = min(self.max_withdrawal_rate, inventory)
                     revenue = volume * current_price
                     cash_flow += revenue
                     inventory -= volume

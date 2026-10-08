@@ -3,16 +3,15 @@ import pandas as pd
 import yfinance as yf
 
 class EnergyStochasticEngine:
-    def __init__(self, ticker="NG=F", periode="2y"):
-        #Initialise le moteur avec un ticker par défaut (Natural Gas Futures) et une période de récupération des données historiques.
+    def __init__(self, ticker="NG=F", period="2y"):
         self.ticker = ticker
-        self.periode = periode
+        self.period = period
         self.historical_prices = self.fetch_data()
 
     def fetch_data(self) -> pd.Series:
         try:
             print(f"Téléchargement des données pour {self.ticker}...")
-            data = yf.download(self.ticker, periode=self.periode, progress=False)
+            data = yf.download(self.ticker, period=self.period, progress=False)
             
             # Gestion de la structure des colonnes de yfinance selon les versions
             if isinstance(data.columns, pd.MultiIndex):
@@ -24,8 +23,7 @@ class EnergyStochasticEngine:
             
             if len(prices) < 50:
                 raise ValueError("Pas assez de données récupérées.")
-            
-            print(f"Données téléchargées avec succès : {len(prices)} points de données.")
+                
             return prices
         except Exception as e:
             print(f"⚠️ Erreur lors du téléchargement ({e}). Génération de données synthétiques de secours...")
@@ -73,7 +71,7 @@ class EnergyStochasticEngine:
             dr = kappa * (theta - simulated_paths[t-1, :]) * dt + sigma * dW
             simulated_paths[t, :] = simulated_paths[t-1, :] + dr
             
-        # S'assurer qu'aucun prix n'est négatif
+        # S'assurer qu'aucun prix n'est négatif 
         simulated_paths = np.maximum(simulated_paths, 0.01)
         
         return simulated_paths
