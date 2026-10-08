@@ -10,7 +10,7 @@ from src.physical_asset import GasStorageAsset
 # Configuration de la page Streamlit
 st.set_page_config(
     page_title="EnergyRisk Quant Engine",
-    page_icon="⚡",
+    page_icon="o",
     layout="wide"
 )
 
